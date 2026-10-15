@@ -5,8 +5,10 @@ teaching data concepts. The user is the *instructor* producing explanations (vid
 blogs, tutorials) — not the learner (that's workshop) and not the data pipeline
 (that's composite → forge → loom).
 
-First tool: the **row renderer** — tiny hand-authored tables, declared operations,
-provenance-colored presentation-quality rendering. The founding plan lives in the vault:
+First tool: **feltboard**, the row renderer — tiny hand-authored tables, declared
+operations, provenance-colored presentation-quality rendering. Named for the classroom
+felt board: pieces placed by hand, mechanism visible. Tagline: *rows, never circles.*
+The founding plan lives in the vault:
 `plan/fabulexa-teach-row-renderer-for-data-concept-explainers`.
 
 ## Principles (binding)
