@@ -218,7 +218,11 @@ function geom(t) {
   for (const w of colW) { colX.push(x); x += w; }
   const keyBand = t.keys.length ? t.keys.length * S.keyBand + 3 : 0;
   const titleH = S.title + 8 + (t.grain ? S.font + 3 : 0);
-  return { colW, colX, width: x, keyBand, titleH };
+  // extent = horizontal room the table needs, titles and captions included
+  const extent = Math.max(x,
+    Math.ceil(measure(t.name, S.title, 700)) + 8,
+    t.grain ? Math.ceil(measure(t.grain, S.font - 1)) + 8 : 0);
+  return { colW, colX, width: x, extent, keyBand, titleH };
 }
 
 function expansionHeight(t, ri, S, geoms) {
@@ -257,16 +261,15 @@ function renderBoard() {
   for (const t of sources) {
     pos[t.id] = { x: S.margin, y };
     y += tableHeight(t, S, geoms) + S.gap * 0.75;
-    leftW = Math.max(leftW, geoms[t.id].width);
+    leftW = Math.max(leftW, geoms[t.id].extent);
   }
-  const leftH = y;
   const xR = sources.length ? S.margin + leftW + S.gap * 1.7 : S.margin;
   y = S.margin + titleH;
   let rightW = 0;
   for (const t of results) {
     pos[t.id] = { x: xR, y };
     y += tableHeight(t, S, geoms) + S.gap * 0.75;
-    rightW = Math.max(rightW, geoms[t.id].width);
+    rightW = Math.max(rightW, geoms[t.id].extent);
   }
 
   // side-panel expansion reserves room to the right of the result column
@@ -282,23 +285,26 @@ function renderBoard() {
     }
   }
 
-  const W = xR + rightW + (panelInfo ? panelWidth(panelInfo, S, geoms) + S.gap : 0) + S.margin;
-  const H = Math.max(leftH, y) + S.margin * 0.5;
-  svg.setAttribute('width', Math.ceil(Math.max(W, 320)));
-  svg.setAttribute('height', Math.ceil(Math.max(H, 200)));
-  svg.setAttribute('viewBox', `0 0 ${Math.ceil(Math.max(W, 320))} ${Math.ceil(Math.max(H, 200))}`);
-
   // paper background — the board is always a light artboard, like a slide
   el('rect', { x: 0, y: 0, width: '100%', height: '100%', fill: '#FFFFFF' }, svg)
     .addEventListener('click', () => { pin(null); });
 
+  const content = el('g', {}, svg);
   if (scene.title) el('text', {
     x: S.margin, y: S.margin + S.title - 4, 'font-size': S.title + 3,
     'font-weight': 700, fill: '#1A2733'
-  }, svg).textContent = scene.title;
+  }, content).textContent = scene.title;
 
-  for (const t of scene.tables) drawTable(svg, t, pos[t.id], S, geoms);
-  if (panelInfo) drawSidePanel(svg, panelInfo, xR + rightW + S.gap, pos[panelInfo.t.id], S, geoms);
+  for (const t of scene.tables) drawTable(content, t, pos[t.id], S, geoms);
+  if (panelInfo) drawSidePanel(content, panelInfo, xR + rightW + S.gap, pos[panelInfo.t.id], S, geoms);
+
+  // size the board to what was actually drawn, so nothing ever clips
+  const bb = content.getBBox();
+  const W = Math.max(Math.ceil(bb.x + bb.width + S.margin), 320);
+  const H = Math.max(Math.ceil(bb.y + bb.height + S.margin), 200);
+  svg.setAttribute('width', W);
+  svg.setAttribute('height', H);
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
 
   overlayEl = el('g', { 'pointer-events': 'none' }, svg);
   refreshDynamic();
@@ -522,6 +528,8 @@ function panelWidth(info, S, geoms) {
     const st = tableById(m.table);
     if (st) w = Math.max(w, geoms[st.id].width + 24);
   }
+  const ann = scene.annotations[K(info.t.id, info.ri)];
+  if (ann) w = Math.max(w, Math.ceil(measure(ann, S.font - 1)) + 28);
   return w;
 }
 
@@ -533,7 +541,9 @@ function drawSidePanel(svg, info, x, resultPos, S, geoms) {
   const w = panelWidth(info, S, geoms);
   const label = info.t.rows[info.ri] ? info.t.rows[info.ri][0] : '';
   const h = S.rowH + members.length * memH + (ann ? S.font + 12 : 0) + 18;
-  const y = resultPos.y;
+  // align the panel with the expanded row, not the table's title
+  const anchor = rowEls[rk];
+  const y = anchor ? anchor.midY - S.rowH / 2 : resultPos.y;
   el('rect', {
     x, y, width: w, height: h, rx: 8, fill: '#FBFCFD',
     stroke: '#C5CBD2', 'stroke-width': 1
@@ -717,7 +727,7 @@ function renderPanel() {
         `<span class="chip" data-chip="${t(c)}">${t(c)}</span>`).join('')}</div>
       <div class="row"><button data-act="add-key">Mark selected columns unique</button></div>
       <div class="keylist">${tb.keys.map((k, ki) =>
-        `<div class="k${badKeys.has(ki) ? ' bad' : ''}"><span>🔑 ${t(k.join(' + '))}${badKeys.has(ki) ? ' — not unique!' : ''}</span>
+        `<div class="k${badKeys.has(ki) ? ' bad' : ''}"><span>${t(k.join(' + '))} — ${badKeys.has(ki) ? 'not unique!' : 'unique'}</span>
          <button data-act="del-key" data-key="${ki}">×</button></div>`).join('')}</div>`;
     if (tb.role === 'result') {
       const tint = scene.tints[tb.id] || {};
