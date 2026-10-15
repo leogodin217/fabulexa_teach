@@ -16,8 +16,9 @@ only rows.)
 **Rows, never circles.** Like the classroom felt board it's named for: you place the
 pieces by hand, move them while you talk, and everyone watches the mechanism happen.
 
-**Use it:** open [`feltboard/index.html`](feltboard/index.html) in a browser — no
-install, no build step. Usage and the scene file format are in
+**Use it: https://leogodin217.github.io/fabulexa_teach/feltboard/** — or open
+[`feltboard/index.html`](feltboard/index.html) from a clone; it's the same thing. No
+install, no build step, no server. Usage and the scene file format are in
 [`feltboard/README.md`](feltboard/README.md).
 
 Author tiny tables (paste straight from a spreadsheet), declare how an operation

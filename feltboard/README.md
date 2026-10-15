@@ -8,8 +8,10 @@ visualization you can hover, expand, present, and export. It computes nothing â€
 classroom felt board it's named for, you place every piece by hand, and that's the point:
 the demonstration is exactly the claim you chose to make.
 
-**No install.** Open `index.html` in a browser. One HTML file, one CSS file, one JS
-file, zero dependencies (policy: [../DEPENDENCIES.md](../DEPENDENCIES.md)).
+**No install.** Use it at
+**https://leogodin217.github.io/fabulexa_teach/feltboard/**, or open `index.html` in a
+browser â€” same thing. One HTML file, one CSS file, one JS file, zero dependencies
+(policy: [../DEPENDENCIES.md](../DEPENDENCIES.md)).
 
 ## Workflow
 
