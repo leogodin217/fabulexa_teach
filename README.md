@@ -11,10 +11,14 @@ only rows.)
 
 ## Tools
 
-### Feltboard *(first tool — in design)*
+### Feltboard *(first tool)*
 
 **Rows, never circles.** Like the classroom felt board it's named for: you place the
 pieces by hand, move them while you talk, and everyone watches the mechanism happen.
+
+**Use it:** open [`feltboard/index.html`](feltboard/index.html) in a browser — no
+install, no build step. Usage and the scene file format are in
+[`feltboard/README.md`](feltboard/README.md).
 
 Author tiny tables (paste straight from a spreadsheet), declare how an operation
 transforms them, and render a presentation-quality, provenance-colored visualization:

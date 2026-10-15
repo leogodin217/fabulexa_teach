@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Feltboard</title>
+  <meta name="description" content="Feltboard — rows, never circles. A manual renderer for teaching data concepts: tiny tables, hand-declared provenance, presentation-quality output.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <aside id="panel" aria-label="Feltboard editor">
+    <h1>Feltboard</h1>
+    <p class="tagline">rows, never circles</p>
+  </aside>
+  <main id="boardwrap">
+    <svg id="board" role="img" aria-label="Feltboard scene"></svg>
+  </main>
+  <div id="banner"></div>
+  <input type="file" id="file" accept=".json,application/json" hidden>
+  <script src="app.js"></script>
+</body>
+</html>

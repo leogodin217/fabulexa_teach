@@ -1,0 +1,253 @@
+/* Feltboard — page chrome. The board itself is SVG and styles itself inline
+   (so exports are self-contained); everything here is editor UI only. */
+
+:root {
+  --bg: #eef1f4;
+  --panel: #ffffff;
+  --text: #1a2733;
+  --muted: #5a6b7a;
+  --border: #d4dae0;
+  --accent: #2e6fb7;
+  --accent-text: #ffffff;
+  --card: #f7f9fb;
+  --danger: #c62828;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14181c;
+    --panel: #1d2329;
+    --text: #e4e9ee;
+    --muted: #96a3af;
+    --border: #343d46;
+    --accent: #5a95d6;
+    --accent-text: #0e1114;
+    --card: #242b32;
+    --danger: #e57373;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #14181c;
+  --panel: #1d2329;
+  --text: #e4e9ee;
+  --muted: #96a3af;
+  --border: #343d46;
+  --accent: #5a95d6;
+  --accent-text: #0e1114;
+  --card: #242b32;
+  --danger: #e57373;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  display: flex;
+  min-height: 100vh;
+}
+
+#panel {
+  width: 330px;
+  min-width: 330px;
+  background: var(--panel);
+  border-right: 1px solid var(--border);
+  padding: 14px;
+  overflow-y: auto;
+  max-height: 100vh;
+  position: sticky;
+  top: 0;
+}
+
+body.present #panel { display: none; }
+
+#boardwrap {
+  flex: 1;
+  overflow: auto;
+  padding: 18px;
+}
+
+#banner {
+  display: none;
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--accent);
+  color: var(--accent-text);
+  padding: 7px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+#banner.on { display: block; }
+
+h1 {
+  font-size: 17px;
+  margin: 0 0 2px;
+}
+.tagline {
+  color: var(--muted);
+  font-size: 12px;
+  margin: 0 0 12px;
+}
+
+.row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+
+button {
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 10px;
+  font: inherit;
+  font-size: 12.5px;
+  cursor: pointer;
+}
+button:hover { border-color: var(--accent); }
+button.primary {
+  background: var(--accent);
+  color: var(--accent-text);
+  border-color: var(--accent);
+}
+button.danger { color: var(--danger); }
+
+input[type="text"], select, textarea {
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 7px;
+  font: inherit;
+  font-size: 12.5px;
+}
+input[type="text"]:focus, select:focus, textarea:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+}
+textarea {
+  width: 100%;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11.5px;
+  white-space: pre;
+  resize: vertical;
+}
+
+#title { width: 100%; font-weight: 600; margin-bottom: 8px; }
+
+.opts {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.opts label { display: flex; align-items: center; gap: 4px; }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+.card .head {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.card .head input[type="text"] { flex: 1; min-width: 0; font-weight: 600; }
+.card .head input[type="color"] {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: none;
+  cursor: pointer;
+}
+.card label.small, .small {
+  font-size: 11.5px;
+  color: var(--muted);
+}
+.card .grain-row { margin: 6px 0; }
+.card .grain-row input { width: 100%; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0; }
+.chip {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2px 9px;
+  font-size: 11.5px;
+  cursor: pointer;
+  background: var(--panel);
+  user-select: none;
+}
+.chip.sel {
+  background: var(--accent);
+  color: var(--accent-text);
+  border-color: var(--accent);
+}
+
+.keylist { font-size: 12px; margin: 4px 0; }
+.keylist .k {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px 0;
+}
+.keylist .bad { color: var(--danger); font-weight: 600; }
+
+.tints { font-size: 12px; }
+.tints .t {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 0;
+}
+.tints select { max-width: 150px; }
+
+#selbox {
+  border: 1.5px solid var(--accent);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+  background: var(--card);
+}
+#selbox .what { font-weight: 600; margin-bottom: 6px; font-size: 13px; }
+#selbox input { width: 100%; margin-top: 6px; }
+
+details {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 12px;
+}
+details li { margin-bottom: 4px; }
+
+footer {
+  margin-top: 14px;
+  font-size: 11px;
+  color: var(--muted);
+}
+footer a { color: var(--accent); }
+
+@media (max-width: 720px) {
+  body { flex-direction: column; }
+  #panel {
+    width: 100%;
+    min-width: 0;
+    max-height: none;
+    position: static;
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+  }
+  #boardwrap { padding: 16px; }
+}
